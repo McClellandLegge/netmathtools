@@ -1,0 +1,7 @@
+packrat/lib*/
+.Rprofile
+.Rproj.user
+.Rbuildignore
+.Rhistory
+.httr-oauth
+packrat/
