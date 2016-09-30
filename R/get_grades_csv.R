@@ -6,7 +6,6 @@
 #' @param active Boolean, should only the active students be pulled?
 #' @return A data frame
 #' @import data.table
-#' @import dplyr
 #' @export
 get_grades_csv <- function(course_id, name, h = NULL, user = NULL,
                            passwd = NULL, all = FALSE, active = FALSE) {
