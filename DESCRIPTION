@@ -12,3 +12,6 @@ Imports: curl,
     jsonlite,
     data.table,
     dplyr
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

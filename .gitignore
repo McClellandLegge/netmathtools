@@ -5,3 +5,4 @@ packrat/lib*/
 .Rhistory
 .httr-oauth
 packrat/
+inst/doc
