@@ -6,7 +6,7 @@
 #' @return A data frame
 #' @import data.table
 #' @export
-get_all_grades <- function(h = NULL, user = NULL, passwd = NULL, all = FALSE, active = TRUE) {
+get_all_grades <- function(h = NULL, user = NULL, passwd = NULL, name = NULL, all = FALSE, active = FALSE) {
   if (! requireNamespace("data.table", quietly = TRUE)) {
     stop("`data.table` needed for this function to work. Please install it.", call. = FALSE)
   }
@@ -18,7 +18,8 @@ get_all_grades <- function(h = NULL, user = NULL, passwd = NULL, all = FALSE, ac
   }
 
   crs <- netmathtools::get_mentor_courses(h)
-  rtn <- sapply(crs$CourseId, netmathtools::get_grades_csv, h = h, name = name,all = all, active = active, simplify = FALSE, USE.NAMES = TRUE)
+  rtn <- sapply(crs$CourseId, netmathtools::get_grades_csv, h = h, name = name,
+                all = all, active = active, simplify = FALSE, USE.NAMES = TRUE)
 
   rl <- data.table::rbindlist(rtn, fill = TRUE, use.names = TRUE, idcol = "CourseId")
   rl_ci <- dplyr::select(merge(rl, crs, by = "CourseId"), -StudentCourseRecordId, -CourseCode)

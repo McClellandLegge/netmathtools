@@ -2,7 +2,8 @@
 #'
 #' @param user Your username, e.g. <netid>@netmath.illinois.edu
 #' @param passwd Your password Mathable password
-#' @description Will log in the user and download cookies to disk
+#' @description Will log in the user, find the Mentor Name and return a curl handle
+#' @return A list with the mentor name and curl handle
 #' @export
 login <- function(user, passwd) {
   h <- curl::new_handle()

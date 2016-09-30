@@ -8,7 +8,7 @@
 #' @import data.table
 #' @export
 get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_list
-                                 , all = FALSE, active = FALSE, outfile = NULL) {
+                                 , all = TRUE, active = FALSE, outfile = NULL) {
   if (! requireNamespace("data.table", quietly = TRUE)) {
     stop("`data.table` needed for this function to work. Please install it.",
          call. = FALSE)
@@ -21,10 +21,10 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   }
 
   writeLines("Extracting Grades...")
-  ags <- setDT(netmathtools::get_all_grades(h))
+  ags <- data.table::setDT(netmathtools::get_all_grades(h, name = name, all = all, active = active))
 
   writeLines("Calculating Most Recent Assignments...")
-  mvars <- c("CourseId", "Mentor", "Status", "LastName", "FirstName")
+  mvars <- c("CourseId", "CourseName", "Mentor", "Status", "LastName", "FirstName")
   mln <- ags[!Value %in% c("Saved", "Unopened", "Opened"),
              list(MaxLesson = max(Lesson)), by = mvars]
   mti <- merge(ags, mln, by.x = c(mvars, "Lesson"), by.y = c(mvars, "MaxLesson"))
@@ -34,13 +34,15 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   writeLines("Merging Student List...")
   sl <- data.table::fread(student_list)
   sl$EndDate <- as.Date(sl$EndDate, format = "%m/%d/%Y")
-  set <- merge(out, sl, by = c("FirstName", "LastName"), all.y = TRUE)
+  set <- merge(out, sl, by = c("FirstName", "LastName"), all = TRUE)
 
   writeLines("Calculating Student Progress...")
   set[!is.na(CourseId),
-      c("Status", "DaysBehind", "TryItsBehind") := rbindlist(
+      c("ProgressStatus", "DaysBehind", "TryItsBehind") := data.table::rbindlist(
         mapply(netmathtools::calc_progress, CourseId, Lesson, TryIt, EndDate,
                SIMPLIFY = FALSE, USE.NAMES = FALSE))]
+  set[is.na(CourseId), ProgressStatus := "Not Found in Mathable"]
+  data.table::setkey(set, CourseName, Mentor, Status, LastName, FirstName)
 
   if (!is.null(outfile)) {
     writeLines("Writting to file...")

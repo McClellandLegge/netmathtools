@@ -4,8 +4,8 @@
 \alias{get_all_grades}
 \title{Get the all grades your students for the courses you mentor}
 \usage{
-get_all_grades(h = NULL, user = NULL, passwd = NULL, all = FALSE,
-  active = TRUE)
+get_all_grades(h = NULL, user = NULL, passwd = NULL, name = NULL,
+  all = FALSE, active = FALSE)
 }
 \arguments{
 \item{h}{A valid handle to a Mathable session (logged in and cookies in jar)}

@@ -11,7 +11,10 @@ login(user, passwd)
 
 \item{passwd}{Your password Mathable password}
 }
+\value{
+A list with the mentor name and curl handle
+}
 \description{
-Will log in the user and download cookies to disk
+Will log in the user, find the Mentor Name and return a curl handle
 }
 

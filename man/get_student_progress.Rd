@@ -5,7 +5,7 @@
 \title{Get the grades your students progress summary}
 \usage{
 get_student_progress(h = NULL, user = NULL, passwd = NULL, student_list,
-  all = FALSE, active = FALSE, outfile = NULL)
+  all = TRUE, active = FALSE, outfile = NULL)
 }
 \arguments{
 \item{h}{A valid handle to a Mathable session (logged in and cookies in jar)}

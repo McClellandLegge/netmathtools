@@ -1,0 +1,31 @@
+#' netmathtools: Tools to query the Mathable API and extract student progress info
+#'
+#' The package contains functions and data sets:
+#' @section End User Functions:
+#' \describe{
+#'   \item{\link{get_student_progress}}{Produce the status report of all the students in the courses that the logged in Mentor has access to. Top level function that writes .csv output for the user.}
+#'   \item{\link{get_all_grades}}{Download all the grades for every student in the courses that the logged in Mentor has access to in long form. Can be useful for additional analytics.}
+#' }
+#'
+#' @section Supporting Functions -- curl calls to API:
+#' \describe{
+#'   \item{\link{login}}{Log into Mathable, establish curl handle. Not intended for end user.}
+#'   \item{\link{get_mentor_courses}}{Find the courses which the logged in mentor has access to. Not intended for end user.}
+#'   \item{\link{get_grades_csv}}{Download grades for which the mentor has access to. Not intended for end user.}
+#' }
+#'
+#' @section Supporting Functions -- R calculations:
+#' \describe{
+#'   \item{\link{calc_progress}}{Calculate progress based on the most recent submission, the student's end date and the course pacing schedule. Not intended for end user.}
+#' }
+#'
+#' @section Internal Data:
+#' \describe{
+#'   \item{\link{schedules}}{Recommended schedules for each course}
+#'   \item{\link{status}}{How the ProgressStatus is determined}
+#'   \item{\link{api}}{The Mathable API endpoint being used}
+#' }
+#'
+#' @docType package
+#' @name netmathtools
+NULL

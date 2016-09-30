@@ -13,15 +13,18 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
     stop("`data.table` needed for this function to work. Please install it.", call. = FALSE)
   }
 
+  if (is.na(end_date)) {
+    return(data.table::data.table(ProgressStatus = "No End Date", DaysBehind = NA, TryItsBehind = NA))
+  }
+
   sched <- setDT(getElement(netmathtools:::schedules, course_id))
   if (nrow(sched) == 0) {
-    # warning(paste("No schedule populated for class:", course_id))
-    return(data.table::data.table(Status = "No Schedule", DaysBehind = NA, TryItsBehind = NA))
+    return(data.table::data.table(ProgressStatus = "No Schedule", DaysBehind = NA, TryItsBehind = NA))
   }
 
   days_left <- as.numeric(end_date - Sys.Date())
   if (days_left < 0) {
-    return(data.table::data.table(Status = "Course Ended", DaysBehind = NA, TryItsBehind = NA))
+    return(data.table::data.table(ProgressStatus = "Course Ended", DaysBehind = NA, TryItsBehind = NA))
   }
 
   should_be <- sched[nrow(sched) - days_left - 1, list(Days = max(Days)), by = .(Lesson, `Try It`)]
