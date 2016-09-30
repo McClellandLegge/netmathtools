@@ -7,22 +7,32 @@
 #' @import data.table
 #' @export
 get_all_grades <- function(h = NULL, user = NULL, passwd = NULL, name = NULL, all = FALSE, active = FALSE) {
-  if (! requireNamespace("data.table", quietly = TRUE)) {
+  if (!requireNamespace("data.table", quietly = TRUE)) {
     stop("`data.table` needed for this function to work. Please install it.", call. = FALSE)
   }
 
+  # if no handle is provided, require that the user and password be passed to
+  # initialize an on-the-fly login
   if (is.null(h)) {
     login <- netmathtools::login(user, passwd)
     h <- login$handle
     name <- login$name
   }
 
+  # get the courses for which the logged in mentor has access to
   crs <- netmathtools::get_mentor_courses(h)
+
+  # for each course, get the grades and return as a named list to allow us to
+  # merge back in the other course meta information
   rtn <- sapply(crs$CourseId, netmathtools::get_grades_csv, h = h, name = name,
                 all = all, active = active, simplify = FALSE, USE.NAMES = TRUE)
 
+  # stack the grades, keeping the course courseID in the 'idcol'
   rl <- data.table::rbindlist(rtn, fill = TRUE, use.names = TRUE, idcol = "CourseId")
-  rl_ci <- dplyr::select(merge(rl, crs, by = "CourseId"), -StudentCourseRecordId, -CourseCode)
+
+  # merge back in the course meta-information, drop undesired columns
+  rl_ci <- dplyr::select(merge(rl, crs, by = "CourseId"),
+                         -StudentCourseRecordId, -CourseCode)
 
   return(rl_ci)
 }
