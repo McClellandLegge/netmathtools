@@ -4,11 +4,14 @@
 \alias{get_student_progress}
 \title{Get the grades your students progress summary}
 \usage{
-get_student_progress(h = NULL, user = NULL, passwd = NULL, all = FALSE,
-  active = FALSE, outfile = NULL)
+get_student_progress(h = NULL, user = NULL, passwd = NULL, student_list,
+  all = FALSE, active = FALSE, outfile = NULL)
 }
 \arguments{
 \item{h}{A valid handle to a Mathable session (logged in and cookies in jar)}
+
+\item{student_list}{A csv file of students with the structure LastName, FirstName,
+EndDate (in header) with the EndDate in the mm/dd/yyyy format}
 
 \item{all}{Boolean, should all of the grades be pulled, or just the logged in Mentor's?}
 

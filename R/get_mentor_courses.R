@@ -3,6 +3,7 @@
 #' @param h A valid handle to a Mathable session (logged in and cookies in jar)
 #' @inheritParams login
 #' @return A data frame
+#' @import data.table
 #' @export
 get_mentor_courses <- function(h = NULL, user = NULL, passwd = NULL) {
   if (! requireNamespace("data.table", quietly = TRUE)) {
