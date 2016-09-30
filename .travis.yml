@@ -1,0 +1,9 @@
+language: R
+sudo: false
+warnings_are_errors: false
+cache: packages
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
