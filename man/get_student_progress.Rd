@@ -5,19 +5,21 @@
 \title{Get the grades your students progress summary}
 \usage{
 get_student_progress(h = NULL, user = NULL, passwd = NULL, student_list,
-  all = TRUE, active = FALSE, outfile = NULL)
+  all_students = TRUE, active = FALSE, outfile = NULL, ...)
 }
 \arguments{
 \item{h}{A valid handle to a Mathable session (logged in and cookies in jar)}
 
-\item{student_list}{A csv file of students with the structure LastName, FirstName,
+\item{student_list}{A data.table (data.frame) of students with the structure LastName, FirstName,
 EndDate (in header) with the EndDate in the mm/dd/yyyy format}
 
-\item{all}{Boolean, should all of the grades be pulled, or just the logged in Mentor's?}
+\item{all_students}{Boolean, should all of the grades be pulled, or just the logged in Mentor's?}
 
 \item{active}{Boolean, should only the active students be pulled?}
 
 \item{outfile}{A filename to write results to.}
+
+\item{...}{Arguments to `merge` when combining the student list and the progress results}
 }
 \value{
 A data frame

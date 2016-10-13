@@ -1,14 +1,15 @@
 #' Get the grades your students progress summary
 #'
 #' @inheritParams get_all_grades
-#' @param student_list A csv file of students with the structure LastName, FirstName,
+#' @param student_list A data.table (data.frame) of students with the structure LastName, FirstName,
 #'    EndDate (in header) with the EndDate in the mm/dd/yyyy format
 #' @param outfile A filename to write results to.
+#' @param ... Arguments to `merge` when combining the student list and the progress results
 #' @return A data frame
 #' @import data.table
 #' @export
 get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_list
-                                 , all = TRUE, active = FALSE, outfile = NULL) {
+                                 , all_students = TRUE, active = FALSE, outfile = NULL, ...) {
   if (!requireNamespace("data.table", quietly = TRUE)) {
     stop("`data.table` needed for this function to work. Please install it.",
          call. = FALSE)
@@ -25,7 +26,8 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   writeLines("Extracting Grades...")
   # extract all the grades for all the courses for which the logged in mentor
   # has access to, return as a data.frame
-  ags <- data.table::setDT(netmathtools::get_all_grades(h, name = name, all = all, active = active))
+  ags <- data.table::setDT(netmathtools::get_all_grades(h, name = name,
+                                                        all_students = all_students, active = active))
 
   writeLines("Calculating Most Recent Assignments...")
   mvars <- c("CourseId", "CourseName", "Mentor", "Status", "LastName", "FirstName")
@@ -48,16 +50,15 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   # Return the non-matches for both the student list and the grade results, the
   # user had a choice to exclude students in the grades and undoubtly will want
   # to know if one of the students in their list was not found.
-  sl <- data.table::fread(student_list)
-  sl$EndDate <- as.Date(sl$EndDate, format = "%m/%d/%Y")
-  set <- merge(out, sl, by = c("FirstName", "LastName"), all = TRUE)
+  student_list$EndDate <- as.Date(student_list$EndDate, format = "%m/%d/%Y")
+  set <- merge(out, student_list, by = c("FirstName", "LastName"), ...)
 
   writeLines("Calculating Student Progress...")
   # for each line in the resulting set, calculate the progress compared to the
   # recommended pace for the course. All boundry condition handling done in the
   # lower level function
   set[!is.na(CourseId),
-      c("ProgressStatus", "DaysBehind", "TryItsBehind") := data.table::rbindlist(
+      c("ProgressStatus", "DaysBehind", "TryItsBehind", "LessonsBehind") := data.table::rbindlist(
         mapply(netmathtools::calc_progress, CourseId, Lesson, TryIt, EndDate,
                SIMPLIFY = FALSE, USE.NAMES = FALSE))]
   set[is.na(CourseId), ProgressStatus := "Not Found in Mathable"]

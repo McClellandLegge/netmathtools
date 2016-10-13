@@ -5,12 +5,12 @@
 \title{Get the all grades your students for the courses you mentor}
 \usage{
 get_all_grades(h = NULL, user = NULL, passwd = NULL, name = NULL,
-  all = FALSE, active = FALSE)
+  all_students = FALSE, active = FALSE)
 }
 \arguments{
 \item{h}{A valid handle to a Mathable session (logged in and cookies in jar)}
 
-\item{all}{Boolean, should all of the grades be pulled, or just the logged in Mentor's?}
+\item{all_students}{Boolean, should all of the grades be pulled, or just the logged in Mentor's?}
 
 \item{active}{Boolean, should only the active students be pulled?}
 }

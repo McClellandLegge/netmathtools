@@ -14,29 +14,37 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
   }
 
   if (is.na(end_date)) {
-    return(data.table::data.table(ProgressStatus = "No End Date", DaysBehind = NA, TryItsBehind = NA))
+    return(data.table::data.table(ProgressStatus = "No End Date",
+                                  DaysBehind = NA, TryItsBehind = NA, LessonsBehind = NA))
   }
 
   sched <- setDT(getElement(netmathtools:::schedules, course_id))
   if (nrow(sched) == 0) {
-    return(data.table::data.table(ProgressStatus = "No Schedule", DaysBehind = NA, TryItsBehind = NA))
+    return(data.table::data.table(ProgressStatus = "No Schedule",
+                                  DaysBehind = NA, TryItsBehind = NA, LessonsBehind = NA))
   }
 
   days_left <- as.numeric(end_date - Sys.Date())
   if (days_left < 0) {
-    return(data.table::data.table(ProgressStatus = "Course Ended", DaysBehind = NA, TryItsBehind = NA))
+    return(data.table::data.table(ProgressStatus = "Course Ended",
+                                  DaysBehind = NA, TryItsBehind = NA, LessonsBehind = NA))
   }
 
   should_be <- sched[nrow(sched) - days_left - 1, list(Days = max(Days)), by = .(Lesson, `Try It`)]
   actually <- sched[Lesson == latest_lesson & `Try It` == latest_tryit, list(Days = max(Days)), by = .(Lesson, `Try It`)]
   days_diff <- should_be$Days - actually$Days
-  tryits_diff <- nrow(unique(sched[Days <= should_be$Days & Days > actually$Days,
+  tryits_abs <- nrow(unique(sched[(Days <= should_be$Days & Days > actually$Days) |
+                                     (Days > should_be$Days & Days <= actually$Days),
                                    c("Lesson", "Try It"), with = FALSE]))
-  res <- data.table::data.table(DaysBehind = days_diff, dummy = days_diff,
-                                TryItsBehind = tryits_diff)
+  tryits_diff <- ifelse(sign(days_diff) == -1L, -tryits_abs, tryits_abs)
+  lesson_diff <- should_be$Lesson - actually$Lesson
+  res <- data.table::data.table(DaysBehind = days_diff,
+                                TryItsBehind = tryits_diff,
+                                LessonsBehind = lesson_diff,
+                                dummy = lesson_diff)
   setkey(netmathtools:::status, low, high)
   sa <- foverlaps(res, netmathtools:::status, by.y = c("low", "high"),
-                  by.x = c("DaysBehind", "dummy"))
+                  by.x = c("LessonsBehind", "dummy"))
   out <- dplyr::select(sa, -low, -high, -dummy)
   return(out)
 }

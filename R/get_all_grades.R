@@ -1,12 +1,12 @@
 #' Get the all grades your students for the courses you mentor
 #'
 #' @inheritParams get_mentor_courses
-#' @param all Boolean, should all of the grades be pulled, or just the logged in Mentor's?
+#' @param all_students Boolean, should all of the grades be pulled, or just the logged in Mentor's?
 #' @param active Boolean, should only the active students be pulled?
 #' @return A data frame
 #' @import data.table
 #' @export
-get_all_grades <- function(h = NULL, user = NULL, passwd = NULL, name = NULL, all = FALSE, active = FALSE) {
+get_all_grades <- function(h = NULL, user = NULL, passwd = NULL, name = NULL, all_students = FALSE, active = FALSE) {
   if (!requireNamespace("data.table", quietly = TRUE)) {
     stop("`data.table` needed for this function to work. Please install it.", call. = FALSE)
   }
@@ -25,7 +25,7 @@ get_all_grades <- function(h = NULL, user = NULL, passwd = NULL, name = NULL, al
   # for each course, get the grades and return as a named list to allow us to
   # merge back in the other course meta information
   rtn <- sapply(crs$CourseId, netmathtools::get_grades_csv, h = h, name = name,
-                all = all, active = active, simplify = FALSE, USE.NAMES = TRUE)
+                all_students = all_students, active = active, simplify = FALSE, USE.NAMES = TRUE)
 
   # stack the grades, keeping the course courseID in the 'idcol'
   rl <- data.table::rbindlist(rtn, fill = TRUE, use.names = TRUE, idcol = "CourseId")

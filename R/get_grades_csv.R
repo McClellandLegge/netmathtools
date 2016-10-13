@@ -2,13 +2,13 @@
 #'
 #' @param course_id The fully qualified id for the course you'd like to pull grades for
 #' @inheritParams get_mentor_courses
-#' @param all Boolean, should all of the grades be pulled, or just the logged in Mentor's?
+#' @param all_students Boolean, should all of the grades be pulled, or just the logged in Mentor's?
 #' @param active Boolean, should only the active students be pulled?
 #' @return A data frame
 #' @import data.table
 #' @export
 get_grades_csv <- function(course_id, name, h = NULL, user = NULL,
-                           passwd = NULL, all = FALSE, active = FALSE) {
+                           passwd = NULL, all_students = FALSE, active = FALSE) {
   if (!requireNamespace("data.table", quietly = TRUE)) {
     stop("`data.table` needed for this function to work. Please install it.",
          call. = FALSE)
@@ -71,7 +71,7 @@ get_grades_csv <- function(course_id, name, h = NULL, user = NULL,
 
   # decide what to return based on the user input, should only active students
   # be returned? Should only the logged in mentor's students be returned?
-  if (isTRUE(all)) {
+  if (isTRUE(all_students)) {
     if (isTRUE(active)) {
       return(m_rtn[m_rtn$Status == "Active", ])
     } else {
