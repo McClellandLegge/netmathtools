@@ -57,8 +57,11 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   # for each line in the resulting set, calculate the progress compared to the
   # recommended pace for the course. All boundry condition handling done in the
   # lower level function
+  outnames <- c("ProgressStatus", "DaysLeft", "DaysBehind", "TryItsBehind",
+                "LessonsBehind", "CurrentPace", "CurrentInterp", "NeededPace",
+                "NeededInterp")
   set[!is.na(CourseId),
-      c("ProgressStatus", "DaysBehind", "TryItsBehind", "LessonsBehind") := data.table::rbindlist(
+      (outnames) := data.table::rbindlist(
         mapply(netmathtools::calc_progress, CourseId, Lesson, TryIt, EndDate,
                SIMPLIFY = FALSE, USE.NAMES = FALSE))]
   set[is.na(CourseId), ProgressStatus := "Not Found in Mathable"]

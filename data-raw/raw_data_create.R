@@ -4,8 +4,8 @@ schedules <- list(
 )
 
 status <- data.table::data.table(
-  low = c(-999, 2, 8, 21)
-  , high = c(1, 7, 20, 999)
+  low = c(-999, 1, 3, 4)
+  , high = c(0, 2, 3, 999)
   , ProgressStatus = c("Green", "Yellow", "Orange", "Red")
 )
 

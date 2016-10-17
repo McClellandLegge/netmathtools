@@ -30,7 +30,7 @@ get_grades_csv <- function(course_id, name, h = NULL, user = NULL,
   # attempt the curl request, which should return a csv if successful, we then
   # read the csv on the fly into memory as a data.table for convenience
   req <- paste0(netmathtools:::api, "/GetGradesCSV?courseId=", course_id)
-  rtn <- data.table::fread(rawToChar(curl::curl_fetch_memory(req, handle = h)$content))
+  rtn <- suppressWarnings(data.table::fread(rawToChar(curl::curl_fetch_memory(req, handle = h)$content)))
 
   # if the curl request is not successful, kick back a null object
   if (nrow(rtn) == 0)
