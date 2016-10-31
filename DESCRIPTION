@@ -1,7 +1,7 @@
 Package: netmathtools
 Type: Package
 Title: Automate NetMath Mentor Duties
-Version: 0.1.0
+Version: 1.0.1
 Authors@R: utils::person("McClelland", "Legge", email = "McClelland.Legge@gmail.com",
   role = c("aut", "cre"))
 Description: The package currently mimicks requests to the NetMath Mathable API in order to streamline mentor duties.
