@@ -24,6 +24,7 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
                                   LessonsBehind = NA,
                                   CurrentPace = NA,
                                   CurrentInterp = NA,
+                                  TryItsLeft = NA,
                                   NeededPace = NA,
                                   NeededInterp = NA))
   }
@@ -38,6 +39,7 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
                                   LessonsBehind = NA,
                                   CurrentPace = NA,
                                   CurrentInterp = NA,
+                                  TryItsLeft = NA,
                                   NeededPace = NA,
                                   NeededInterp = NA))
   }
@@ -50,6 +52,7 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
                                   LessonsBehind = NA,
                                   CurrentPace = NA,
                                   CurrentInterp = NA,
+                                  TryItsLeft = NA,
                                   NeededPace = NA,
                                   NeededInterp = NA))
   }
@@ -65,8 +68,9 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
                                    c("Lesson", "Try It"), with = FALSE]))
   tryits_diff <- ifelse(sign(days_diff) == -1L, -tryits_abs, tryits_abs)
   lesson_diff <- should_be$Lesson - actually$Lesson
-  needed_pace <- sched[Days > at_day, .(Lesson, `Try It`)] %>%
-    unique %>% nrow %>% magrittr::divide_by(days_left) %>% round(digits = 2)
+  tryits_left <- sched[Days > at_day, .(Lesson, `Try It`)] %>%
+    unique %>% nrow
+  needed_pace <-  round(tryits_left / days_left, digits = 2)
   current_pace <- sched[Days <= at_day, .(Lesson, `Try It`)] %>%
     unique %>% nrow %>% magrittr::divide_by(should_day) %>% round(digits = 2)
   np_interp <- paste0("Needs to submit ", ceiling(needed_pace / interval) * interval, " Try It(s) a day")
@@ -84,6 +88,7 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
     LessonsBehind = lesson_diff,
     CurrentPace = current_pace,
     CurrentInterp = cp_interp,
+    TryItsLeft = tryits_left,
     NeededPace = needed_pace,
     NeededInterp = np_interp,
     dummy = lesson_diff)

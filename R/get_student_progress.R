@@ -58,7 +58,7 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   # recommended pace for the course. All boundry condition handling done in the
   # lower level function
   outnames <- c("ProgressStatus", "DaysLeft", "DaysBehind", "TryItsBehind",
-                "LessonsBehind", "CurrentPace", "CurrentInterp", "NeededPace",
+                "LessonsBehind", "CurrentPace", "CurrentInterp", "TryItsLeft", "NeededPace",
                 "NeededInterp")
   set[!is.na(CourseId),
       (outnames) := data.table::rbindlist(
