@@ -38,7 +38,7 @@ A data table with columns:
        average in order to complete the course on time
    \item \code{NeededInterp} A plain-english (approximate) interpretation of
        what the \code{NeededPace} means in terms of needed submission behavior
-       from the student
+       from the student. Intentionally rounded up to the half day
 }
 }
 \description{

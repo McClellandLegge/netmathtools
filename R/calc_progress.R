@@ -27,7 +27,7 @@
 #'        average in order to complete the course on time
 #'    \item \code{NeededInterp} A plain-english (approximate) interpretation of
 #'        what the \code{NeededPace} means in terms of needed submission behavior
-#'        from the student
+#'        from the student. Intentionally rounded up to the half day
 #' }
 #' @examples
 #' calc_progress("deployedcourses/uiuc_netmath_math461_r2012_mm",
@@ -91,10 +91,9 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
   should_be <- sched[should_day, list(Days = max(Days)), by = .(Lesson, `Try It`)]
   actually <- sched[Days == at_day, list(Days = max(Days)), by = .(Lesson, `Try It`)]
   days_diff <- should_be$Days - actually$Days
-  tryits_abs <- nrow(unique(sched[(Days <= should_be$Days & Days > actually$Days) |
+  tryits_diff <- nrow(unique(sched[(Days <= should_be$Days & Days > actually$Days) |
                                      (Days > should_be$Days & Days <= actually$Days),
                                    c("Lesson", "Try It"), with = FALSE]))
-  tryits_diff <- ifelse(sign(days_diff) == -1L, -tryits_abs, tryits_abs)
   lesson_diff <- should_be$Lesson - actually$Lesson
   tryits_left <- sched[Days > at_day, .(Lesson, `Try It`)] %>%
     unique %>% nrow
@@ -104,9 +103,9 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
   np_interp <- paste0("Needs to submit ", ceiling(needed_pace / interval) * interval, " Try It(s) a day")
   cp_interp <- ifelse(current_pace < 1,
                       paste0("Currently submitting a Try It every ",
-                             ceiling(1 / current_pace / interval) * interval, " days"),
+                             round(1 / current_pace / interval) * interval, " days"),
                       paste0("Currently submitting ",
-                             floor(current_pace / interval) * interval, " Try Its(s) a day"))
+                             round(current_pace / interval) * interval, " Try Its(s) a day"))
 
 
   res <- data.table::data.table(

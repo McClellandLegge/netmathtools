@@ -35,7 +35,7 @@
 #'        average in order to complete the course on time
 #'    \item \code{NeededInterp} A plain-english (approximate) interpretation of
 #'        what the \code{NeededPace} means in terms of needed submission behavior
-#'        from the student
+#'        from the student. Intentionally rounded up to the half day
 #' }
 #' @examples
 #' \dontrun{
@@ -62,6 +62,11 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
                                  , all_students = TRUE, active = FALSE, outfile = NULL, ...) {
   if (!requireNamespace("data.table", quietly = TRUE)) {
     stop("`data.table` needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  if (!requireNamespace("plyr", quietly = TRUE)) {
+    stop("`plyr` needed for this function to work. Please install it.",
          call. = FALSE)
   }
 
@@ -107,26 +112,23 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   # for each line in the resulting set, calculate the progress compared to the
   # recommended pace for the course. All boundry condition handling done in the
   # lower level function
-  outnames <- c("ProgressStatus", "DaysLeft", "DaysBehind", "TryItsBehind",
-                "LessonsBehind", "CurrentPace", "CurrentInterp", "TryItsLeft", "NeededPace",
-                "NeededInterp")
-  set[!is.na(CourseId),
-      (outnames) := data.table::rbindlist(
-        mapply(netmathtools::calc_progress, CourseId, Lesson, TryIt, EndDate,
-               SIMPLIFY = FALSE, USE.NAMES = FALSE))]
-  set[is.na(CourseId), ProgressStatus := "Not Found in Mathable"]
+  fset <- plyr::ddply(set, colnames(set), function(x){
+    with(x, netmathtools::calc_progress(CourseId, Lesson, TryIt, EndDate))
+  }) %>% as.data.table
+
+  fset[is.na(CourseId), ProgressStatus := "Not Found in Mathable"]
 
   # setkey to order the columns
-  data.table::setkey(set, CourseName, Mentor, Status, LastName, FirstName)
+  data.table::setkey(fset, CourseName, Mentor, Status, LastName, FirstName)
 
   # if an output file is specified, then write to disk
   if (!is.null(outfile)) {
     writeLines("Writting to file...")
-    write.csv(set, file = outfile, row.names = FALSE)
+    write.csv(fset, file = outfile, row.names = FALSE)
   }
 
   # strangely, the return only works when there has been an `<-` or `=` assignment
   # to another variable... suspect this has to do with being a data.table but
   # need to investigate further
-  return(set)
+  return(fset)
 }
