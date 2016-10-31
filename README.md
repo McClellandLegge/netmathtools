@@ -18,3 +18,4 @@ The following provides a list of the functions and data available to the user.
 ```R
 ?netmathtools
 ```
+The full package manual can be viewed in the installation files on your local machine or [in the repo](inst/netmathtools.pdf).
