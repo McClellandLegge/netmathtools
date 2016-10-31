@@ -4,6 +4,12 @@ packrat/lib*/
 .Rbuildignore
 .Rhistory
 .httr-oauth
+.RData
 packrat/
 inst/doc
 data-raw/student_list.csv
+workflow.R
+scratch.R
+certificate*
+cookies.txt
+updated.csv

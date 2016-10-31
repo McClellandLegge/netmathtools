@@ -14,9 +14,28 @@ get_mentor_courses(h = NULL, user = NULL, passwd = NULL)
 \item{passwd}{Your password Mathable password}
 }
 \value{
-A data frame
+A data frame with columns:
+\itemize{
+   \item \code{StudentCourseRecordId} The student course record id for the
+       Mentor, who is always a student in the courses they have access to Mentor
+   \item \code{CourseId} The fully-qualified Mathable course ID
+   \item \code{CourseName} The "short name" of the course
+   \item \code{CourseCode} The code for the course which usually includes the
+       abbreviated course name (e.g. MATH220), the year it was created and the
+       section (e.g. MM, HS or semester for EGR sections)
+}
 }
 \description{
 Get the courses for which you mentor
+}
+\examples{
+\dontrun{
+# Use an existing session
+session <- login("mkemp6@netmath.illinois.edu", "<passwd>")
+get_mentor_courses(h = session$handle)
+
+# Or login on the fly (does not preserve session for subsequent calls)
+get_mentor_courses(user = "mkemp6@netmath.illinois.edu", passwd = "<passwd>")
+}
 }
 

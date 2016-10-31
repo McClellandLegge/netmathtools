@@ -4,7 +4,31 @@
 #' @inheritParams get_mentor_courses
 #' @param all_students Boolean, should all of the grades be pulled, or just the logged in Mentor's?
 #' @param active Boolean, should only the active students be pulled?
-#' @return A data frame
+#' @return A data frame with columns:
+#' \itemize{
+#'    \item \code{Mentor} The mentor name
+#'    \item \code{Status} The status of the student, e.g. "Completed", "Active" or "Withdrawn"
+#'    \item \code{Name} The full name of the student in Last Name, First Name form
+#'    \item \code{LastName} The last name of the student
+#'    \item \code{FirstName} The first name of the student
+#'    \item \code{Value} The grade/status of the Try It
+#'    \item \code{Lesson} The Lesson number
+#'    \item \code{TryIt} The Try It number
+#' }
+#' @examples
+#' \dontrun{
+#' ### login on the fly (does not preserve session for subsequent calls)
+#' get_grades_csv(course_id = "deployedcourses/uiuc_netmath_math461_r2012_mm",
+#'                name = "Mcclelland Kemp",
+#'                user = "mkemp6@netmath.illinois.edu",
+#'                passwd = "<passwd>")
+#'
+#' ### Use an existing session
+#' session <- login("mkemp6@netmath.illinois.edu", "<passwd>")
+#' get_grades_csv(course_id = "deployedcourses/uiuc_netmath_math461_r2012_mm",
+#'                name = "Mcclelland Kemp",
+#'                h = session$handle)
+#' }
 #' @import data.table
 #' @export
 get_grades_csv <- function(course_id, name, h = NULL, user = NULL,

@@ -15,9 +15,27 @@ get_all_grades(h = NULL, user = NULL, passwd = NULL, name = NULL,
 \item{active}{Boolean, should only the active students be pulled?}
 }
 \value{
-A data frame
+A data frame with columns:
+\itemize{
+   \item \code{CourseId} The fully qualified course ID in Mathable
+   \item \code{Mentor} The mentor name
+   \item \code{Status} The status of the student, e.g. "Completed", "Active" or "Withdrawn"
+   \item \code{Name} The full name of the student in Last Name, First Name form
+   \item \code{LastName} The last name of the student
+   \item \code{FirstName} The first name of the student
+   \item \code{Value} The grade/status of the Try It
+   \item \code{Lesson} The Lesson number
+   \item \code{TryIt} The Try It number
+   \item \code{CourseName} The "short name" for the course
+}
 }
 \description{
 Get the all grades your students for the courses you mentor
+}
+\examples{
+\dontrun{
+session <- login("mkemp6@netmath.illinois.edu", "<passwd>")
+get_all_grades(h = session$handle, name = session$name)
+}
 }
 

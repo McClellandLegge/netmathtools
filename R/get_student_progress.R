@@ -5,7 +5,57 @@
 #'    EndDate (in header) with the EndDate in the mm/dd/yyyy format
 #' @param outfile A filename to write results to.
 #' @param ... Arguments to `merge` when combining the student list and the progress results
-#' @return A data frame
+#' @return A data frame with columns:
+#' \itemize{
+#'    \item \code{FirstName} The first name of the student
+#'    \item \code{LastName} The last name of the student
+#'    \item \code{CourseId} The fully qualified course ID in Mathable
+#'    \item \code{CourseName} The "short name" for the course
+#'    \item \code{Mentor} The mentor name
+#'    \item \code{Status} The status of the student, e.g. "Completed", "Active" or "Withdrawn"
+#'    \item \code{Lesson} The Lesson number
+#'    \item \code{TryIt} The Try It number
+#'    \item \code{EndDate} The student's end date
+#'    \item \code{ProgressStatus} The status of the student determined by the
+#'        criteria set by the NetMath office
+#'    \item \code{DaysLeft} The number of days left in the course the student has
+#'    \item \code{DaysBehind} The number of days behind the recommended schedule
+#'        the student is
+#'    \item \code{TryItsBehind} The number of Try Its behind the recommended
+#'        schedule the student is
+#'    \item \code{LessonsBehind} The number of Lessons behind the recommended
+#'        schedule the student is
+#'    \item \code{CurrentPace} The number of Try Its submitted per day the
+#'        student is averaging
+#'    \item \code{CurrentInterp} A plain-english (approximate) interpretation of
+#'        what the student's current pace means about their submission behavior
+#'    \item \code{TryItsLeft} The number of Try Its the student has left in the
+#'        course
+#'    \item \code{NeededPace} The number of Try Its per day the student must
+#'        average in order to complete the course on time
+#'    \item \code{NeededInterp} A plain-english (approximate) interpretation of
+#'        what the \code{NeededPace} means in terms of needed submission behavior
+#'        from the student
+#' }
+#' @examples
+#' \dontrun{
+#' # Read in a student list from a google sheet
+#' netmath_students_rss <- googlesheets::gs_url("https://docs.google.com/spreadsheets/...")
+#'
+#' # Format to data.table from data.frame and format the student's end date to
+#' # the R datatype \code{Date}
+#' netmath_students <- as.data.table(gs_read(netmath_students_rss))
+#' netmath_students$EndDate <- as.Date(netmath_students$EndDate, format = "%m/%d/%Y")
+#'
+#' # Get a progress update on the students in the student list.
+#' # The 'all.y = TRUE' is telling the function to keep all students in the
+#' # student list -- helps detect any possible mis-spellings of names
+#' prog <- get_student_progress(user = "mkemp6@netmath.illinois.edu",
+#'                             passwd = "<passwd>",
+#'                             student_list = netmath_students[, .(LastName, FirstName, EndDate)],
+#'                             all.y = TRUE,
+#'                             active = TRUE)
+#' }
 #' @import data.table
 #' @export
 get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_list

@@ -4,9 +4,36 @@
 #'    select the correct schedule
 #' @param latest_lesson The latest lesson that the student has completed
 #' @param latest_tryit The latest Try It that the student has completed
-#' @param end_date The end date of the student
+#' @param end_date The end date of the student, must be an R date object
 #' @import data.table magrittr
-#' @return A data frame
+#' @return A data table with columns:
+#' \itemize{
+#'    \item \code{ProgressStatus} The status of the student determined by the
+#'        criteria set by the NetMath office
+#'    \item \code{DaysLeft} The number of days left in the course the student has
+#'    \item \code{DaysBehind} The number of days behind the recommended schedule
+#'        the student is
+#'    \item \code{TryItsBehind} The number of Try Its behind the recommended
+#'        schedule the student is
+#'    \item \code{LessonsBehind} The number of Lessons behind the recommended
+#'        schedule the student is
+#'    \item \code{CurrentPace} The number of Try Its submitted per day the
+#'        student is averaging
+#'    \item \code{CurrentInterp} A plain-english (approximate) interpretation of
+#'        what the student's current pace means about their submission behavior
+#'    \item \code{TryItsLeft} The number of Try Its the student has left in the
+#'        course
+#'    \item \code{NeededPace} The number of Try Its per day the student must
+#'        average in order to complete the course on time
+#'    \item \code{NeededInterp} A plain-english (approximate) interpretation of
+#'        what the \code{NeededPace} means in terms of needed submission behavior
+#'        from the student
+#' }
+#' @examples
+#' calc_progress("deployedcourses/uiuc_netmath_math461_r2012_mm",
+#'               latest_lesson = 4,
+#'               latest_tryit = 3,
+#'               end_date = as.Date("12/25/2016", format = "%m/%d/%Y"))
 #' @export
 calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
   if (! requireNamespace("data.table", quietly = TRUE)) {
@@ -15,6 +42,7 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
   if (! requireNamespace("magrittr", quietly = TRUE)) {
     stop("`magrittr` needed for this function to work. Please install it.", call. = FALSE)
   }
+
 
   if (is.na(end_date)) {
     return(data.table::data.table(ProgressStatus = "No End Date",

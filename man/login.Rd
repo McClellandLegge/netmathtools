@@ -12,9 +12,19 @@ login(user, passwd)
 \item{passwd}{Your password Mathable password}
 }
 \value{
-A list with the mentor name and curl handle
+A list
+\itemize{
+   \item \code{handle} A curl handle that is our login session, allowing us
+       to query the Mathable API
+   \item \code{name} The Mentor's name as it appears in Mathable
+}
 }
 \description{
 Will log in the user, find the Mentor Name and return a curl handle
+}
+\examples{
+\dontrun{
+session <- login("mkemp6@netmath.illinois.edu", "<passwd>")
+}
 }
 

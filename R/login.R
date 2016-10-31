@@ -3,7 +3,16 @@
 #' @param user Your username, e.g. <netid>@netmath.illinois.edu
 #' @param passwd Your password Mathable password
 #' @description Will log in the user, find the Mentor Name and return a curl handle
-#' @return A list with the mentor name and curl handle
+#' @return A list
+#' \itemize{
+#'    \item \code{handle} A curl handle that is our login session, allowing us
+#'        to query the Mathable API
+#'    \item \code{name} The Mentor's name as it appears in Mathable
+#' }
+#' @examples
+#' \dontrun{
+#' session <- login("mkemp6@netmath.illinois.edu", "<passwd>")
+#' }
 #' @export
 login <- function(user, passwd) {
   # create a new curl handle, which automatically saves the cookies upon

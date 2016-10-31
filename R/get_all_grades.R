@@ -3,7 +3,24 @@
 #' @inheritParams get_mentor_courses
 #' @param all_students Boolean, should all of the grades be pulled, or just the logged in Mentor's?
 #' @param active Boolean, should only the active students be pulled?
-#' @return A data frame
+#' @return A data frame with columns:
+#' \itemize{
+#'    \item \code{CourseId} The fully qualified course ID in Mathable
+#'    \item \code{Mentor} The mentor name
+#'    \item \code{Status} The status of the student, e.g. "Completed", "Active" or "Withdrawn"
+#'    \item \code{Name} The full name of the student in Last Name, First Name form
+#'    \item \code{LastName} The last name of the student
+#'    \item \code{FirstName} The first name of the student
+#'    \item \code{Value} The grade/status of the Try It
+#'    \item \code{Lesson} The Lesson number
+#'    \item \code{TryIt} The Try It number
+#'    \item \code{CourseName} The "short name" for the course
+#' }
+#' @examples
+#' \dontrun{
+#' session <- login("mkemp6@netmath.illinois.edu", "<passwd>")
+#' get_all_grades(h = session$handle, name = session$name)
+#' }
 #' @import data.table
 #' @export
 get_all_grades <- function(h = NULL, user = NULL, passwd = NULL, name = NULL, all_students = FALSE, active = FALSE) {
