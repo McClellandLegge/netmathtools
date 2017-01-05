@@ -61,9 +61,10 @@ get_grades_csv <- function(course_id, name, h = NULL, user = NULL,
     return(NULL)
 
   # extract the first and last name with some ugly regex... NEEDS WORK!
+  ptn <- "([A-z ]+), ([A-z ]+)"
   rtn[, `:=`(
-    FirstName = gsub("([A-z]+), ([A-z]+)", "\\2", Name)
-    , LastName = gsub("([A-z]+), ([A-z]+)", "\\1", Name)
+    FirstName = gsub(ptn, "\\2", Name)
+    , LastName = gsub(ptn, "\\1", Name)
   )]
 
   # try to handle any unusual names without commas, assume the first string is
