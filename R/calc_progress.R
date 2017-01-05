@@ -43,6 +43,9 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
     stop("`magrittr` needed for this function to work. Please install it.", call. = FALSE)
   }
 
+  if (is.na(latest_lesson)) {
+    latest_lesson <- latest_tryit <- 1
+  }
 
   if (is.na(end_date)) {
     return(data.table::data.table(ProgressStatus = "No End Date",
@@ -100,12 +103,12 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
   needed_pace <-  round(tryits_left / days_left, digits = 2)
   current_pace <- sched[Days <= at_day, .(Lesson, `Try It`)] %>%
     unique %>% nrow %>% magrittr::divide_by(should_day) %>% round(digits = 2)
-  np_interp <- paste0("Needs to submit ", ceiling(needed_pace / interval) * interval, " Try It(s) a day")
+  np_interp <- paste0("need to submit ", ceiling(needed_pace / interval) * interval, " Try It(s) a day")
   cp_interp <- ifelse(current_pace < 1,
-                      paste0("Currently submitting a Try It every ",
+                      paste0("currently submitting a Try It every ",
                              round(1 / current_pace / interval) * interval, " days"),
-                      paste0("Currently submitting ",
-                             round(current_pace / interval) * interval, " Try Its(s) a day"))
+                      paste0("currently submitting ",
+                             round(current_pace / interval) * interval, " Try It(s) a day"))
 
 
   res <- data.table::data.table(
