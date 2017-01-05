@@ -86,6 +86,9 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
 
   writeLines("Calculating Most Recent Assignments...")
   mvars <- c("CourseId", "CourseName", "Mentor", "Status", "LastName", "FirstName")
+
+  full_list <- unique(ags[, mvars, with = FALSE])
+
   # calculate the latest Lesson in which each student in each course has either
   # submitted an assignment or had one graded
   mln <- ags[!Value %in% c("Saved", "Unopened", "Opened"),
@@ -99,6 +102,8 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   out <- mti[!Value %in% c("Saved", "Unopened", "Opened"),
       list(TryIt = max(TryIt)), by = c(mvars, "Lesson")][order(LastName, FirstName)]
 
+  fl_out <- merge(full_list, out, by = mvars, all.x = TRUE)
+
   writeLines("Merging Student List...")
   # merge in the student list with the end dates, probably should make the date
   # format a parameter, but seems reasonable to expect a convention for now.
@@ -106,7 +111,11 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   # user had a choice to exclude students in the grades and undoubtly will want
   # to know if one of the students in their list was not found.
   student_list$EndDate <- as.Date(student_list$EndDate, format = "%m/%d/%Y")
-  set <- merge(out, student_list, by = c("FirstName", "LastName"), ...)
+  set <- merge(fl_out, student_list, by = c("FirstName", "LastName"), ...)
+
+  ed_filt <- set[, list(EndDate = max(EndDate)), by = .(FirstName, LastName, CourseId)]
+
+  set <- merge(set, ed_filt, by = c("FirstName", "LastName", "CourseId", "EndDate"))
 
   writeLines("Calculating Student Progress...")
   # for each line in the resulting set, calculate the progress compared to the
