@@ -102,7 +102,8 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   out <- mti[!Value %in% c("Saved", "Unopened", "Opened"),
       list(TryIt = max(TryIt)), by = c(mvars, "Lesson")][order(LastName, FirstName)]
 
-  fl_out <- merge(full_list, out, by = mvars, all.x = TRUE)
+  fl_out <- merge(full_list, out, by = mvars, all.x = TRUE) %>%
+    dplyr::select(-CourseId)
 
   writeLines("Merging Student List...")
   # merge in the student list with the end dates, probably should make the date
