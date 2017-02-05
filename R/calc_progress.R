@@ -90,7 +90,7 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
 
   interval <- 0.5 # (days)
   at_day <- max(sched[Lesson == latest_lesson & `Try It` == latest_tryit]$Days)
-  should_day <- nrow(sched) - days_left - 1
+  should_day <- max(nrow(sched) - days_left - 1, 1)
   should_be <- sched[should_day, list(Days = max(Days)), by = .(Lesson, `Try It`)]
   actually <- sched[Days == at_day, list(Days = max(Days)), by = .(Lesson, `Try It`)]
   days_diff <- should_be$Days - actually$Days
