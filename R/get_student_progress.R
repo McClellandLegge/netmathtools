@@ -102,8 +102,7 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   out <- mti[!Value %in% c("Saved", "Unopened", "Opened"),
       list(TryIt = max(TryIt)), by = c(mvars, "Lesson")][order(LastName, FirstName)]
 
-  fl_out <- merge(full_list, out, by = mvars, all.x = TRUE) %>%
-    dplyr::select(-CourseId)
+  fl_out <- merge(full_list, out, by = mvars, all.x = TRUE)
 
   writeLines("Merging Student List...")
   # merge in the student list with the end dates, probably should make the date
@@ -112,21 +111,21 @@ get_student_progress <- function(h = NULL, user = NULL, passwd = NULL, student_l
   # user had a choice to exclude students in the grades and undoubtly will want
   # to know if one of the students in their list was not found.
   student_list$EndDate <- as.Date(student_list$EndDate, format = "%m/%d/%Y")
-  set <- merge(fl_out, student_list, by = c("FirstName", "LastName"), ...)
+  set <- merge(fl_out, student_list, by = c("FirstName", "LastName", "CourseId"), ...)
 
-  ed_filt <- set[, list(EndDate = max(EndDate)), by = .(FirstName, LastName, CourseId)]
+  course_done <- set[Status %in% c("Completed", "Withdrawn", "Cancelled")]
+  course_done[, ProgressStatus := "Course Ended"]
 
-  set <- merge(set, ed_filt, by = c("FirstName", "LastName", "CourseId", "EndDate"))
+  working <- set[!Status %in% c("Completed", "Withdrawn", "Cancelled")]
 
   writeLines("Calculating Student Progress...")
   # for each line in the resulting set, calculate the progress compared to the
   # recommended pace for the course. All boundry condition handling done in the
   # lower level function
-  fset <- plyr::ddply(set, colnames(set), function(x){
+  fset <- plyr::ddply(working, colnames(working), function(x){
     with(x, netmathtools::calc_progress(CourseId, Lesson, TryIt, EndDate))
-  }) %>% as.data.table
-
-  fset[is.na(CourseId), ProgressStatus := "Not Found in Mathable"]
+  }) %>%
+    rbind(., course_done, fill = TRUE)
 
   # setkey to order the columns
   data.table::setkey(fset, CourseName, Mentor, Status, LastName, FirstName)
