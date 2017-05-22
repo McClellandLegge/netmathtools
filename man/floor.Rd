@@ -26,4 +26,3 @@ floor(x, 2)
 # is equivalent to:
 base::floor(100 * x)
 }
-

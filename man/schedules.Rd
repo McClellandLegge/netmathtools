@@ -17,4 +17,3 @@ netmathtools:::schedules
 A R list structure with named elements of the courses containing schedules with the following layout:
 }
 \keyword{datasets}
-

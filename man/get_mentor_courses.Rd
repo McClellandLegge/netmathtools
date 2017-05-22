@@ -38,4 +38,3 @@ get_mentor_courses(h = session$handle)
 get_mentor_courses(user = "mkemp6@netmath.illinois.edu", passwd = "<passwd>")
 }
 }
-

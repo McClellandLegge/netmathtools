@@ -17,4 +17,3 @@ netmathtools:::status
 A R data.table structure containing the criteria for assiging the progress status
 }
 \keyword{datasets}
-

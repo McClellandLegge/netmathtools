@@ -50,4 +50,3 @@ calc_progress("deployedcourses/uiuc_netmath_math461_r2012_mm",
               latest_tryit = 3,
               end_date = as.Date("12/25/2016", format = "\%m/\%d/\%Y"))
 }
-

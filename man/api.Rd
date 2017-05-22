@@ -12,4 +12,3 @@ netmathtools:::api
 The URL for the Mathable API endpoint being useds
 }
 \keyword{datasets}
-

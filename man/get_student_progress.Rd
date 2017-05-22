@@ -10,6 +10,10 @@ get_student_progress(h = NULL, user = NULL, passwd = NULL, student_list,
 \arguments{
 \item{h}{A valid handle to a Mathable session (logged in and cookies in jar)}
 
+\item{user}{Your username, e.g. <netid>@netmath.illinois.edu}
+
+\item{passwd}{Your password Mathable password}
+
 \item{student_list}{A data.table (data.frame) of students with the structure LastName, FirstName,
 EndDate (in header) with the EndDate in the mm/dd/yyyy format}
 
@@ -78,4 +82,3 @@ prog <- get_student_progress(user = "mkemp6@netmath.illinois.edu",
                             active = TRUE)
 }
 }
-

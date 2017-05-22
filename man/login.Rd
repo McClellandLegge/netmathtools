@@ -27,4 +27,3 @@ Will log in the user, find the Mentor Name and return a curl handle
 session <- login("mkemp6@netmath.illinois.edu", "<passwd>")
 }
 }
-

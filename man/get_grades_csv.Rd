@@ -12,6 +12,10 @@ get_grades_csv(course_id, name, h = NULL, user = NULL, passwd = NULL,
 
 \item{h}{A valid handle to a Mathable session (logged in and cookies in jar)}
 
+\item{user}{Your username, e.g. <netid>@netmath.illinois.edu}
+
+\item{passwd}{Your password Mathable password}
+
 \item{all_students}{Boolean, should all of the grades be pulled, or just the logged in Mentor's?}
 
 \item{active}{Boolean, should only the active students be pulled?}
@@ -47,4 +51,3 @@ get_grades_csv(course_id = "deployedcourses/uiuc_netmath_math461_r2012_mm",
                h = session$handle)
 }
 }
-

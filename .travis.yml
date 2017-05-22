@@ -3,6 +3,12 @@ sudo: false
 warnings_are_errors: false
 cache: packages
 
+before_script:
+  - Rscript -e 'install.packages("covr", repos="http://mirror.las.iastate.edu/CRAN/")'
+
+after_success:
+  - Rscript -e 'library(covr); coveralls()'
+
 notifications:
   email:
     on_success: change
