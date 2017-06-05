@@ -11,5 +11,5 @@ status <- data.table::data.table(
   , ProgressStatus = c("Green", "Yellow", "Orange", "Red")
 )
 
-api <- netmathtools:::api
+api <-  "https://courseware.mathable.io/WSAPI.asmx"
 devtools::use_data(schedules, api, status, internal = TRUE, overwrite = TRUE)
