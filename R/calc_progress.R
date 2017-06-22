@@ -74,6 +74,11 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
                                   NeededPace = NA,
                                   NeededInterp = NA))
   }
+  if (!all(c("Days", "Lesson", "Try It") %in% colnames(sched))) {
+    fnd <- paste0("'", paste0(colnames(sched), collapse = "', '"), "'")
+    msg <- paste0("Expected column names 'Days', 'Lesson' and 'Try It' in schedule names', found ", fnd, " instead")
+    stop(msg)
+  }
 
   if (days_left < 0) {
     return(data.table::data.table(ProgressStatus = "Course Ended",
@@ -89,7 +94,7 @@ calc_progress <- function(course_id, latest_lesson, latest_tryit, end_date) {
   }
 
   interval <- 0.5 # (days)
-  at_day <- max(sched[Lesson == latest_lesson & `Try It` == latest_tryit]$Days)
+  at_day <- max(sched[Lesson <= latest_lesson & `Try It` <= latest_tryit]$Days)
   should_day <- max(nrow(sched) - days_left - 1, 1)
   should_be <- sched[should_day, list(Days = max(Days)), by = .(Lesson, `Try It`)]
   actually <- sched[Days == at_day, list(Days = max(Days)), by = .(Lesson, `Try It`)]
